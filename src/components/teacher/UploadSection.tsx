@@ -87,12 +87,10 @@ export function UploadSection() {
     }
     setIsSubmitting(true);
     try {
-      // ================== THE FINAL, CORRECT URL ==================
       const response = await fetch('/api/notices', {
-      // ==========================================================
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: noticeTitle, content: noticeContent, category, status: 'published' }), // Send as 'published' directly
+        body: JSON.stringify({ title: noticeTitle, content: noticeContent, category, status: 'published' }),
       });
       if (!response.ok) { throw new Error('Failed to publish notice'); }
       alert('Notice published successfully!');
@@ -127,9 +125,34 @@ export function UploadSection() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
   }
 
-  const getUploadIcon = () => { /* ... no change ... */ };
-  const getUploadTitle = () => { /* ... no change ... */ };
-  const getUploadDescription = () => { /* ... no change ... */ };
+  // --- THESE FUNCTIONS ARE NOW FILLED IN ---
+  const getUploadIcon = () => {
+    switch (uploadType) {
+      case 'pdf': return <FileText className="w-6 h-6 text-primary" />;
+      case 'image': return <ImageIcon className="w-6 h-6 text-primary" />;
+      case 'notice': return <MessageSquare className="w-6 h-6 text-primary" />;
+      default: return <Upload className="w-6 h-6 text-primary" />;
+    }
+  }
+
+  const getUploadTitle = () => {
+    switch (uploadType) {
+      case 'pdf': return 'Upload PDF Documents';
+      case 'image': return 'Upload Images';
+      case 'notice': return 'Create Notice';
+      default: return 'Upload Content';
+    }
+  }
+
+  const getUploadDescription = () => {
+    switch (uploadType) {
+      case 'pdf': return 'Upload study materials, assignments, and educational PDFs';
+      case 'image': return 'Upload diagrams, charts, and visual learning materials';
+      case 'notice': return 'Create and publish announcements for your students';
+      default: return 'Upload educational content';
+    }
+  }
+  // --- END OF FILLED IN FUNCTIONS ---
 
   return (
     <div className="space-y-6">
@@ -207,16 +230,10 @@ export function UploadSection() {
               </div>
               <div {...getRootProps()} className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${ isDragActive ? 'border-primary bg-primary/5' : 'border-gray-300 hover:border-primary hover:bg-gray-50' }`}>
                 <input {...getInputProps()} />
-                <div className="space-y-4">
-                  {getUploadIcon()}
-                  <div>
-                    <h3 className="text-lg font-medium text-primary">{isDragActive ? 'Drop files here' : 'Drag & drop files here'}</h3>
-                    <p className="text-muted-foreground">or click to select files</p>
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    {uploadType === 'pdf' && 'Supports: PDF files (max 10MB each)'}
-                    {uploadType === 'image' && 'Supports: PNG, JPG, JPEG, GIF, WebP (max 5MB each)'}
-                  </div>
+                <div className="space-y-2 flex flex-col items-center">
+                  <Upload className="w-8 h-8 text-muted-foreground" />
+                  <h3 className="text-lg font-medium text-primary">{isDragActive ? 'Drop files here' : 'Drag & drop files here'}</h3>
+                  <p className="text-muted-foreground">or click to select files</p>
                 </div>
               </div>
             </div>

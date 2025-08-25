@@ -1,12 +1,12 @@
 // src/app/api/ingest/route.js
 
 import { ChromaClient } from "chromadb";
-import { Ollama } from "ollama";
+
 import pdf from "pdf-extraction"; // <-- Using the new, CORRECT library
 
 // Connect to the running ChromaDB server
 const chroma = new ChromaClient({ path: "http://localhost:8000" });
-const ollama = new Ollama({ host: "http://localhost:11434" });
+
 
 export async function POST(request) {
   try {
